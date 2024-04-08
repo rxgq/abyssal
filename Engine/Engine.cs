@@ -2,7 +2,7 @@
 
 internal abstract class Engine
 {
-    private readonly Vector2 ScreenSize = new(512, 512);
+    private readonly Vector2 ScreenSize = new(1080, 768);
     private readonly Canvas Window;
     public readonly Color BackgroundColour = Color.White;
 
@@ -13,6 +13,9 @@ internal abstract class Engine
 
     public Engine()
     {
+        Application.EnableVisualStyles();
+        Application.SetCompatibleTextRenderingDefault(false);
+
         Window = new Canvas()
         { 
             Size = new(ScreenSize.X, ScreenSize.Y), 

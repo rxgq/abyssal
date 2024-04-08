@@ -19,7 +19,7 @@ internal class Shape2D
         Engine.RegisterShape(this);
     }
 
-    public void DestroySelf() 
+    public void DestroySelf()
     {
         Engine.UnregisterShape(this);
     }
