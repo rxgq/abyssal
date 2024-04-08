@@ -1,10 +1,16 @@
 ﻿using Microsoft.VisualBasic.Devices;
+using System.Numerics;
 
 namespace engine;
 
 internal class Game : Engine
 {
     Shape2D Player;
+
+    bool Up = false;
+    bool Down = false;
+    bool Left = false;
+    bool Right = false;
 
     public override void OnLoad()
     {
@@ -18,36 +24,39 @@ internal class Game : Engine
 
     public override void OnUpdate()
     {
+        // Movement
+        Player.Position.Y += (Up ? -1 : Down ? 1 : 0);
+        Player.Position.X += (Left ? -1 : Right ? 1 : 0);
     }
+
 
     public override void GetKeyDown(KeyEventArgs e)
     {
-        switch (e.KeyCode) 
-        { 
-            case Keys.W:
-            case Keys.Up:
-                Player.Position.Y -= 10;
-                break;
+        if (e.KeyCode == Keys.W)
+            Up = true;
 
-            case Keys.A:
-            case Keys.Left:
-                Player.Position.X -= 10;
-                break;
+        else if (e.KeyCode == Keys.S)
+            Down = true;
 
-            case Keys.S:
-            case Keys.Down:
-                Player.Position.Y += 10;
-                break;
+        else if (e.KeyCode == Keys.A)
+            Left = true;
 
-            case Keys.D:
-            case Keys.Right:
-                Player.Position.X += 10;
-                break;
-        }
+        else if (e.KeyCode == Keys.D)
+            Right = true;
     }
 
     public override void GetKeyUp(KeyEventArgs e)
     {
+        if (e.KeyCode == Keys.W)
+            Up = false;
 
+        else if (e.KeyCode == Keys.S)
+            Down = false;
+
+        else if (e.KeyCode == Keys.A)
+            Left = false;sssssssss
+
+        else if (e.KeyCode == Keys.D)
+            Right = false;
     }
 }
