@@ -7,7 +7,7 @@ internal abstract class Engine
     private readonly Thread GameLoopThread;
     public Color BackgroundColour = Color.White;
 
-    public List<Shape2D> Shapes = new();
+    public static List<Shape2D> Shapes = new();
 
     public Engine()
     {
@@ -43,7 +43,6 @@ internal abstract class Engine
             { 
                 Console.WriteLine(ex.ToString());
             }
-
         }
     }
 
@@ -60,6 +59,11 @@ internal abstract class Engine
     {
         Graphics g = e.Graphics;
         g.Clear(BackgroundColour);
+
+        foreach (Shape2D shape in Shapes) 
+        {
+            g.FillRectangle(new SolidBrush(Color.Red), shape.Position.X, shape.Position.Y);
+        }
     }
 
     public abstract void OnLoad();
