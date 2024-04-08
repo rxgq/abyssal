@@ -8,6 +8,7 @@ internal abstract class Engine
     public Color BackgroundColour = Color.White;
 
     public static List<Shape2D> Shapes = new();
+    public static List<Sprite2D> Sprites = new();
 
     public Engine()
     {
@@ -68,14 +69,28 @@ internal abstract class Engine
         Shapes.Remove(shape);
     }
 
+    public static void RegisterSprite(Sprite2D sprite)
+    {
+        Sprites.Add(sprite);
+    }
+    public static void UnregisterSprite(Sprite2D sprite)
+    {
+        Sprites.Remove(sprite);
+    }
+
     private void Renderer(object sender, PaintEventArgs e)
     {
         Graphics g = e.Graphics;
-        g.Clear(BackgroundColour);
+        //g.Clear(BackgroundColour);
 
         foreach (Shape2D shape in Shapes) 
         {
             g.FillRectangle(new SolidBrush(Color.Red), shape.Position.X, shape.Position.Y, shape.Scale.X, shape.Scale.Y);
+        }
+
+        foreach (Sprite2D sprite in Sprites)
+        {
+            g.FillRectangle(new SolidBrush(Color.Red), sprite.Position.X, sprite.Position.Y, sprite.Scale.X, sprite.Scale.Y);
         }
     }
 
@@ -85,9 +100,7 @@ internal abstract class Engine
 
     public abstract void OnDraw();
 
-
     public abstract void GetKeyDown(KeyEventArgs e);
 
     public abstract void GetKeyUp(KeyEventArgs e);
-
 }

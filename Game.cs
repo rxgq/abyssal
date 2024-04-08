@@ -5,7 +5,7 @@ namespace engine;
 
 internal class Game : Engine
 {
-    Shape2D Player;
+    Sprite2D Player;
 
     bool Up = false;
     bool Down = false;
@@ -15,6 +15,9 @@ internal class Game : Engine
     public override void OnLoad()
     {
         Player = new(new Vector2(10, 10), new Vector2(10, 10), "player");
+
+        Shape2D sprite = new(new Vector2(40, 40), new Vector2(10, 10), "player");
+
     }
 
     public override void OnDraw()
@@ -24,9 +27,10 @@ internal class Game : Engine
 
     public override void OnUpdate()
     {
-        // Movement
-        Player.Position.Y += (Up ? -1 : Down ? 1 : 0);
-        Player.Position.X += (Left ? -1 : Right ? 1 : 0);
+        Vector2 newPosition = new(Player.Position.X + (Left ? -1 : Right ? 1 : 0), Player.Position.Y + (Up ? -1 : Down ? 1 : 0));
+
+        if (!Player.IsColliding(newPosition))
+            Player.Position = newPosition;
     }
 
 
@@ -54,7 +58,7 @@ internal class Game : Engine
             Down = false;
 
         else if (e.KeyCode == Keys.A)
-            Left = false;sssssssss
+            Left = false;
 
         else if (e.KeyCode == Keys.D)
             Right = false;
