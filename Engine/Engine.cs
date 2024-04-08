@@ -19,6 +19,9 @@ internal abstract class Engine
 
         Window.Paint += Renderer;
 
+        Window.KeyDown += Window_KeyDown;
+        Window.KeyUp += Window_KeyUp;
+
         GameLoopThread = new Thread(GameLoop);
         GameLoopThread.Start();
 
@@ -46,6 +49,16 @@ internal abstract class Engine
         }
     }
 
+    public void Window_KeyDown(object sender, KeyEventArgs e)
+    {
+        GetKeyDown(e);
+    }
+
+    public void Window_KeyUp(object sender, KeyEventArgs e)
+    {
+        GetKeyUp(e);
+    }
+
     public static void RegisterShape(Shape2D shape) 
     {
         Shapes.Add(shape);   
@@ -62,7 +75,7 @@ internal abstract class Engine
 
         foreach (Shape2D shape in Shapes) 
         {
-            g.FillRectangle(new SolidBrush(Color.Red), shape.Position.X, shape.Position.Y);
+            g.FillRectangle(new SolidBrush(Color.Red), shape.Position.X, shape.Position.Y, shape.Scale.X, shape.Scale.Y);
         }
     }
 
@@ -71,5 +84,10 @@ internal abstract class Engine
     public abstract void OnUpdate();
 
     public abstract void OnDraw();
+
+
+    public abstract void GetKeyDown(KeyEventArgs e);
+
+    public abstract void GetKeyUp(KeyEventArgs e);
 
 }
