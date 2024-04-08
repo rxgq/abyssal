@@ -5,19 +5,14 @@ namespace engine;
 
 internal class Game : Engine
 {
-    Sprite2D Player;
-
-    bool Up = false;
-    bool Down = false;
-    bool Left = false;
-    bool Right = false;
+    Player Player;
 
     public override void OnLoad()
     {
         Player = new(new Vector2(400, 400), new Vector2(10, 10), "player");
 
-        Shape2D sprite = new(new Vector2(500, 400), new Vector2(10, 10), "s1");
-        Shape2D sprite2 = new(new Vector2(600, 600), new Vector2(10, 10), "s2");
+        new Shape2D(new Vector2(500, 400), new Vector2(10, 10), "s1");
+        new Shape2D(new Vector2(600, 600), new Vector2(10, 10), "s2");
     }
 
     public override void OnDraw()
@@ -27,7 +22,10 @@ internal class Game : Engine
 
     public override void OnUpdate()
     {
-        Vector2 newPosition = new(Player.Position.X + (Left ? -1 : Right ? 1 : 0), Player.Position.Y + (Up ? -1 : Down ? 1 : 0));
+        Vector2 newPosition = new(
+            Player.Position.X + (Player.Left ? -1 : Player.Right ? 1 : 0), 
+            Player.Position.Y + (Player.Up ? -1 : Player.Down ? 1 : 0)
+        );
 
         if (!Player.IsColliding(newPosition))
             Player.Position = newPosition;
@@ -36,30 +34,30 @@ internal class Game : Engine
     public override void GetKeyDown(KeyEventArgs e)
     {
         if (e.KeyCode == Keys.W)
-            Up = true;
+            Player.Up = true;
 
         else if (e.KeyCode == Keys.S)
-            Down = true;
+            Player.Down = true;
 
         else if (e.KeyCode == Keys.A)
-            Left = true;
+            Player.Left = true;
 
         else if (e.KeyCode == Keys.D)
-            Right = true;
+            Player.Right = true;
     }
 
     public override void GetKeyUp(KeyEventArgs e)
     {
         if (e.KeyCode == Keys.W)
-            Up = false;
+            Player.Up = false;
 
         else if (e.KeyCode == Keys.S)
-            Down = false;
+            Player.Down = false;
 
         else if (e.KeyCode == Keys.A)
-            Left = false;
+            Player.Left = false;
 
         else if (e.KeyCode == Keys.D)
-            Right = false;
+            Player.Right = false;
     }
 }

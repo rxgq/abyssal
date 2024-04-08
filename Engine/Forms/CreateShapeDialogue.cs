@@ -18,6 +18,6 @@ public partial class CreateShapeDialogue : Form
         Vector2 position = new(XPosition, YPosition);
         Vector2 scale = new(XScale, YScale);
 
-        Shape2D shape = new(position, scale, "test");
+        new Shape2D(position, scale, "test");
     }
 }
