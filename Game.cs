@@ -15,6 +15,6 @@ internal class Game : Engine
 
     public override void OnLoad()
     {
-        BackgroundColour = Color.Black;
+
     }
 }

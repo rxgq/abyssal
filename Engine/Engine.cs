@@ -7,6 +7,8 @@ internal abstract class Engine
     private readonly Thread GameLoopThread;
     public Color BackgroundColour = Color.White;
 
+    public List<Shape2D> Shapes = new();
+
     public Engine()
     {
         Window = new Canvas()
@@ -31,7 +33,6 @@ internal abstract class Engine
         {
             try
             {
-
                 OnDraw();
                 Window.BeginInvoke((MethodInvoker)delegate { Window.Refresh(); });
                 OnUpdate();
@@ -44,6 +45,15 @@ internal abstract class Engine
             }
 
         }
+    }
+
+    public static void RegisterShape(Shape2D shape) 
+    {
+        Shapes.Add(shape);   
+    }
+    public static void UnregisterShape(Shape2D shape)
+    {
+        Shapes.Remove(shape);
     }
 
     private void Renderer(object sender, PaintEventArgs e)
