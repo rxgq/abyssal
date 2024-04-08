@@ -16,8 +16,8 @@ internal class Game : Engine
     {
         Player = new(new Vector2(10, 10), new Vector2(10, 10), "player");
 
-        Shape2D sprite = new(new Vector2(40, 40), new Vector2(10, 10), "player");
-
+        Shape2D sprite = new(new Vector2(40, 40), new Vector2(10, 10), "s1");
+        Shape2D sprite2 = new(new Vector2(60, 60), new Vector2(10, 10), "s2");
     }
 
     public override void OnDraw()
@@ -32,7 +32,6 @@ internal class Game : Engine
         if (!Player.IsColliding(newPosition))
             Player.Position = newPosition;
     }
-
 
     public override void GetKeyDown(KeyEventArgs e)
     {
