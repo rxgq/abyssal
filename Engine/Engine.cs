@@ -80,14 +80,21 @@ internal abstract class Engine
 
     public static void UpdateListBoxItems()
     {
+        GetCanvas()!.UpdateListBoxItems();
+    }
+
+    public static Canvas? GetCanvas() 
+    {
         if (Application.OpenForms.Count > 0)
         {
             Form canvasForm = Application.OpenForms[0];
             if (canvasForm is Canvas canvas)
             {
-                canvas.UpdateListBoxItems();
+                return canvas;
             }
         }
+
+        return null;
     }
 
     public static void RegisterSprite(Sprite2D sprite) => Sprites.Add(sprite);

@@ -13,15 +13,19 @@ internal class Canvas : Form
     private bool ShowHoverBox;
     private bool IsMouseDown = false;
 
+    private bool RemoveMode = false;
+
     private Panel panel1;
     private Label shapeCount;
     private Button playButton;
     private CheckBox colliderFrictionCheckbox;
+    private Button removeModeButton;
     private ListBox spriteListBox;
 
     private void InitializeComponent()
     {
         panel1 = new Panel();
+        removeModeButton = new Button();
         colliderFrictionCheckbox = new CheckBox();
         playButton = new Button();
         shapeCount = new Label();
@@ -32,6 +36,7 @@ internal class Canvas : Form
         // panel1
         // 
         panel1.BackColor = Color.FromArgb(50, 50, 50);
+        panel1.Controls.Add(removeModeButton);
         panel1.Controls.Add(colliderFrictionCheckbox);
         panel1.Controls.Add(playButton);
         panel1.Controls.Add(shapeCount);
@@ -41,11 +46,21 @@ internal class Canvas : Form
         panel1.Size = new Size(265, 722);
         panel1.TabIndex = 0;
         // 
+        // removeModeButton
+        // 
+        removeModeButton.Location = new Point(12, 301);
+        removeModeButton.Name = "removeModeButton";
+        removeModeButton.Size = new Size(105, 29);
+        removeModeButton.TabIndex = 1;
+        removeModeButton.Text = "Remove: OFF";
+        removeModeButton.UseVisualStyleBackColor = true;
+        removeModeButton.Click += Remove_Click;
+        // 
         // colliderFrictionCheckbox
         // 
         colliderFrictionCheckbox.AutoSize = true;
         colliderFrictionCheckbox.ForeColor = SystemColors.ControlLightLight;
-        colliderFrictionCheckbox.Location = new Point(12, 307);
+        colliderFrictionCheckbox.Location = new Point(12, 685);
         colliderFrictionCheckbox.Name = "colliderFrictionCheckbox";
         colliderFrictionCheckbox.Size = new Size(124, 24);
         colliderFrictionCheckbox.TabIndex = 4;
@@ -69,18 +84,19 @@ internal class Canvas : Form
         // 
         shapeCount.AutoSize = true;
         shapeCount.ForeColor = Color.White;
-        shapeCount.Location = new Point(12, 60);
+        shapeCount.Location = new Point(12, 58);
         shapeCount.Name = "shapeCount";
-        shapeCount.Size = new Size(0, 20);
+        shapeCount.Size = new Size(17, 20);
         shapeCount.TabIndex = 2;
+        shapeCount.Text = "0";
         // 
         // spriteListBox
         // 
         spriteListBox.FormattingEnabled = true;
         spriteListBox.ItemHeight = 20;
-        spriteListBox.Location = new Point(12, 82);
+        spriteListBox.Location = new Point(12, 81);
         spriteListBox.Name = "spriteListBox";
-        spriteListBox.Size = new Size(111, 204);
+        spriteListBox.Size = new Size(147, 204);
         spriteListBox.TabIndex = 1;
         spriteListBox.TabStop = false;
         // 
@@ -134,14 +150,16 @@ internal class Canvas : Form
 
         Vector2 position = new(X, Y);
 
-
-        Shape2D? shapeToRemove = Engine.Shapes.FirstOrDefault(shape =>
+        Shape2D? potentialShapeOverlap = Engine.Shapes.FirstOrDefault(shape =>
             shape.Position.X == position.X && shape.Position.Y == position.Y);
 
-        if (shapeToRemove is not null)
-            Engine.UnregisterShape(shapeToRemove);
+        if (RemoveMode)
+        {
+            if (potentialShapeOverlap is not null)
+                Engine.UnregisterShape(potentialShapeOverlap);
+        }
 
-        else
+        else if (potentialShapeOverlap is null)
             new Shape2D(position, scale, GetNextID());
     }
 
@@ -207,7 +225,7 @@ internal class Canvas : Form
         }
     }
 
-    private void playButton_Click(object sender, EventArgs e)
+    public void playButton_Click(object sender, EventArgs e)
     {
         Game.Play = !Game.Play;
         Game.Player.Up = false;
@@ -219,6 +237,8 @@ internal class Canvas : Form
 
         Game.Player.PlayPosition.X = Game.Player.Position.X;
         Game.Player.PlayPosition.Y = Game.Player.Position.Y;
+
+        ToggleUIVisibility(Game.Play);
 
         Focus();
         ActiveControl = null;
@@ -232,4 +252,37 @@ internal class Canvas : Form
         Focus();
         ActiveControl = null;
     }
+
+    private void Remove_Click(object sender, EventArgs e)
+    {
+        RemoveMode = !RemoveMode;
+        removeModeButton.BackColor = RemoveMode ? Color.Gray : Color.White;
+        removeModeButton.ForeColor = RemoveMode ? Color.White : Color.Black;
+        removeModeButton.Text = RemoveMode ? "Remove: ON" : "Remove: OFF";
+
+        removeModeButton.FlatAppearance.BorderColor = RemoveMode ? Color.Gray : Color.White;
+    }
+
+    protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+    {
+        if (keyData == Keys.Escape)
+        {
+            playButton_Click(null, EventArgs.Empty);
+            return true;
+        }
+
+        return base.ProcessCmdKey(ref msg, keyData);
+    }
+
+
+    public void ToggleUIVisibility(bool visible)
+    {
+        panel1.Visible = !visible;
+        playButton.Visible = !visible;
+        colliderFrictionCheckbox.Visible = !visible;
+        removeModeButton.Visible = !visible;
+        shapeCount.Visible = !visible;
+        spriteListBox.Visible = !visible;
+    }
+
 }
