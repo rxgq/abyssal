@@ -18,7 +18,7 @@ internal abstract class Engine
 
         Window = new Canvas()
         { 
-            Size = new(ScreenSize.X, ScreenSize.Y), 
+            Size = new((int)ScreenSize.X, (int)ScreenSize.Y), 
             Text = "New Game", 
         };
 
@@ -60,10 +60,10 @@ internal abstract class Engine
         //g.Clear(BackgroundColour);
 
         foreach (Shape2D shape in Shapes) 
-            g.FillRectangle(new SolidBrush(Color.Red), shape.Position.X, shape.Position.Y, shape.Scale.X, shape.Scale.Y);
+            g.FillRectangle(new SolidBrush(Color.Red), (int)shape.Position.X, (int)shape.Position.Y, (int)shape.Scale.X, (int)shape.Scale.Y);
 
         foreach (Sprite2D sprite in Sprites)
-            g.FillRectangle(new SolidBrush(Color.Blue), sprite.PlayPosition.X, sprite.PlayPosition.Y, sprite.Scale.X, sprite.Scale.Y);
+            g.FillRectangle(new SolidBrush(Color.Blue), (int)sprite.PlayPosition.X, (int)sprite.PlayPosition.Y, (int)sprite.Scale.X, (int)sprite.Scale.Y);
     }
 
     public static void RegisterShape(Shape2D shape)

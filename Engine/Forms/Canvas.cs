@@ -184,7 +184,7 @@ internal class Canvas : Form
         if (ShowHoverBox && HoverPosition != null)
         {
             using Brush hoverBrush = new SolidBrush(Color.FromArgb(100, Color.Gray));
-            e.Graphics.FillRectangle(hoverBrush, HoverPosition.X, HoverPosition.Y, GridSize, GridSize);
+            e.Graphics.FillRectangle(hoverBrush, (int)HoverPosition.X, (int)HoverPosition.Y, GridSize, GridSize);
         }
     }
 

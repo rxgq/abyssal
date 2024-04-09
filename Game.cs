@@ -32,7 +32,7 @@ internal class Game : Engine
 
             if (Player.Left || Player.Right)
             {
-                Vector2 tempPositionX = new(Player.Left ? newX - Player.Velocity : newX + Player.Velocity, Player.PlayPosition.Y);
+                Vector2 tempPositionX = new(Player.Left ? newX - Player.Velocity + 1: newX + Player.Velocity - 1, Player.PlayPosition.Y);
 
                 if (!Player.IsColliding(tempPositionX))
                     newX = tempPositionX.X;
@@ -40,7 +40,7 @@ internal class Game : Engine
 
             if (Player.Up || Player.Down)
             {
-                Vector2 tempPositionY = new(Player.PlayPosition.X, Player.Up ? newY - Player.Velocity : newY + Player.Velocity);
+                Vector2 tempPositionY = new(Player.PlayPosition.X, Player.Up ? newY - Player.Velocity + 1 : newY + Player.Velocity - 1);
 
                 if (!Player.IsColliding(tempPositionY))
                     newY = tempPositionY.Y;
