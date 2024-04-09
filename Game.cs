@@ -44,6 +44,14 @@ internal class Game : Engine
 
         else if (e.KeyCode == Keys.D)
             Player.Right = true;
+
+        else if (e.Control && e.KeyCode == Keys.Z)
+        {
+            if (Engine.Shapes.Count > 0) 
+            {
+                Engine.Shapes.RemoveAt(Engine.Shapes.Count - 1);
+            }
+        }
     }
 
     public override void GetKeyUp(KeyEventArgs e)
