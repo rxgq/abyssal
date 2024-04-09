@@ -3,12 +3,14 @@
 internal class Sprite2D
 {
     public Vector2 Position { get; set; }
+    public Vector2 PlayPosition { get; set; }
     public Vector2 Scale { get; set; }
     public string Tag { get; set; }
 
     public Sprite2D(Vector2 position, Vector2 scale, string tag)
     {
         Position = position;
+        PlayPosition = Position;
         Scale = scale;
         Tag = tag;
 

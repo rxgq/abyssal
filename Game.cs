@@ -18,12 +18,12 @@ internal class Game : Engine
     public override void OnUpdate()
     {
         Vector2 newPosition = new(
-            Player.Position.X + (Player.Left ? -1 : Player.Right ? 1 : 0), 
-            Player.Position.Y + (Player.Up ? -1 : Player.Down ? 1 : 0)
+            Player.PlayPosition.X + (Player.Left ? -1 : Player.Right ? 1 : 0),
+            Player.PlayPosition.Y + (Player.Up ? -1 : Player.Down ? 1 : 0)
         );
 
         if (!Player.IsColliding(newPosition))
-            Player.Position = newPosition;
+            Player.PlayPosition = newPosition;
     }
 
     public override void GetKeyDown(KeyEventArgs e)

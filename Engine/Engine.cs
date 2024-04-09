@@ -63,7 +63,7 @@ internal abstract class Engine
             g.FillRectangle(new SolidBrush(Color.Red), shape.Position.X, shape.Position.Y, shape.Scale.X, shape.Scale.Y);
 
         foreach (Sprite2D sprite in Sprites)
-            g.FillRectangle(new SolidBrush(Color.Blue), sprite.Position.X, sprite.Position.Y, sprite.Scale.X, sprite.Scale.Y);
+            g.FillRectangle(new SolidBrush(Color.Blue), sprite.PlayPosition.X, sprite.PlayPosition.Y, sprite.Scale.X, sprite.Scale.Y);
     }
 
     public static void RegisterShape(Shape2D shape)

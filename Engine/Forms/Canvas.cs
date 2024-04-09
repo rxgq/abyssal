@@ -137,6 +137,9 @@ internal class Canvas : Form
 
         playButton.Text = Game.Play ? "Playing..." : "Play";
 
+        Game.Player.PlayPosition.X = Game.Player.Position.X;
+        Game.Player.PlayPosition.Y = Game.Player.Position.Y;
+
         Focus();
         ActiveControl = null;
     }
