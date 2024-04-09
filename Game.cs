@@ -48,9 +48,7 @@ internal class Game : Engine
 
             Player.PlayPosition = new Vector2(newX, newY);
         }
-
     }
-
 
     public override void GetKeyDown(KeyEventArgs e)
     {

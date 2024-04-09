@@ -142,8 +142,27 @@ internal class Canvas : Form
             Engine.UnregisterShape(shapeToRemove);
 
         else
-            new Shape2D(position, scale, "shape");
+            new Shape2D(position, scale, GetNextID());
     }
+
+    public string GetNextID()
+    {
+        int largestShapeTag = -1;
+        foreach (var shape in Engine.Shapes)
+        {
+            int shapeID;
+            if (int.TryParse(shape.Tag.Substring(6), out shapeID))
+            {
+                if (shapeID > largestShapeTag)
+                    largestShapeTag = shapeID;
+            }
+        }
+
+        largestShapeTag++;
+
+        return $"shape {largestShapeTag}";
+    }
+
 
     private void Canvas_MouseMove(object sender, MouseEventArgs e)
     {
