@@ -18,8 +18,8 @@ internal class Game : Engine
     public override void OnUpdate()
     {
         Vector2 newPosition = new(
-            Player.PlayPosition.X + (Player.Left ? -1 : Player.Right ? 1 : 0),
-            Player.PlayPosition.Y + (Player.Up ? -1 : Player.Down ? 1 : 0)
+            Player.PlayPosition.X + (Player.Left ? -Player.Velocity : Player.Right ? Player.Velocity : 0),
+            Player.PlayPosition.Y + (Player.Up ? -Player.Velocity : Player.Down ? Player.Velocity : 0)
         );
 
         if (!Player.IsColliding(newPosition))

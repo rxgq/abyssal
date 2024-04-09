@@ -119,22 +119,19 @@ internal class Canvas : Form
         Vector2 position = new(X, Y);
 
 
-        if (Engine.Shapes.Any(e => e.Position.X == position.X && e.Position.Y == position.Y))
-        {
-            return;
-        }
+        Shape2D? shapeToRemove = Engine.Shapes.FirstOrDefault(shape =>
+            shape.Position.X == position.X && shape.Position.Y == position.Y);
 
-        new Shape2D(position, scale, "test");
+        if (shapeToRemove is not null)
+            Engine.UnregisterShape(shapeToRemove);
+
+        else
+            new Shape2D(position, scale, "shape");
     }
 
     private void Canvas_MouseMove(object sender, MouseEventArgs e) 
     {
         if (Game.Play) return;
-
-        if (IsMouseDown) 
-        {
-            Canvas_MouseClick(sender, e);
-        }
 
         int X = (e.X / GridSize) * GridSize;
         int Y = (e.Y / GridSize) * GridSize;
@@ -148,7 +145,6 @@ internal class Canvas : Form
     private void Canvas_MouseDown(object sender, MouseEventArgs e) 
     {
         IsMouseDown = true;
-        Canvas_MouseClick(sender, e);
     }
 
     private void Canvas_MouseUp(object sender, MouseEventArgs e)
