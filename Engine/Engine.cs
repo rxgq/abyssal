@@ -66,8 +66,29 @@ internal abstract class Engine
             g.FillRectangle(new SolidBrush(Color.Blue), sprite.Position.X, sprite.Position.Y, sprite.Scale.X, sprite.Scale.Y);
     }
 
-    public static void RegisterShape(Shape2D shape) => Shapes.Add(shape);
-    public static void UnregisterShape(Shape2D shape) => Shapes.Remove(shape);
+    public static void RegisterShape(Shape2D shape)
+    {
+        Shapes.Add(shape);
+        UpdateListBoxItems();
+    }
+
+    public static void UnregisterShape(Shape2D shape)
+    {
+        Shapes.Remove(shape);
+        UpdateListBoxItems();
+    }
+
+    public static void UpdateListBoxItems()
+    {
+        if (Application.OpenForms.Count > 0)
+        {
+            Form canvasForm = Application.OpenForms[0];
+
+            if (canvasForm is Canvas canvas)
+                canvas.InitialiseListBoxItems();
+        }
+    }
+
     public static void RegisterSprite(Sprite2D sprite) => Sprites.Add(sprite);
     public static void UnregisterSprite(Sprite2D sprite) => Sprites.Remove(sprite);
 
