@@ -130,6 +130,10 @@ internal class Canvas : Form
     private void playButton_Click(object sender, EventArgs e)
     {
         Game.Play = !Game.Play;
+        Game.Player.Up = false;
+        Game.Player.Down = false;
+        Game.Player.Left = false;
+        Game.Player.Right = false;
 
         playButton.Text = Game.Play ? "Playing..." : "Play";
 

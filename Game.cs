@@ -2,7 +2,7 @@
 
 internal class Game : Engine
 {
-    Player Player;
+    public static Player Player;
     public static bool Play = false;
 
     public override void OnLoad()
