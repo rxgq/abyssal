@@ -11,25 +11,38 @@ internal class Canvas : Form
 
     private Panel panel1;
     private Button createShapeButton;
+    private Label shapeCount;
     private ListBox spriteListBox;
 
     private void InitializeComponent()
     {
         panel1 = new Panel();
-        createShapeButton = new Button();
         spriteListBox = new ListBox();
+        createShapeButton = new Button();
+        shapeCount = new Label();
         panel1.SuspendLayout();
         SuspendLayout();
         // 
         // panel1
         // 
         panel1.BackColor = Color.FromArgb(50, 50, 50);
+        panel1.Controls.Add(shapeCount);
         panel1.Controls.Add(spriteListBox);
         panel1.Controls.Add(createShapeButton);
         panel1.Location = new Point(0, 0);
         panel1.Name = "panel1";
         panel1.Size = new Size(265, 722);
         panel1.TabIndex = 0;
+        // 
+        // spriteListBox
+        // 
+        spriteListBox.FormattingEnabled = true;
+        spriteListBox.ItemHeight = 20;
+        spriteListBox.Location = new Point(12, 83);
+        spriteListBox.Name = "spriteListBox";
+        spriteListBox.Size = new Size(111, 204);
+        spriteListBox.TabIndex = 1;
+        spriteListBox.TabStop = false;
         // 
         // createShapeButton
         // 
@@ -42,16 +55,14 @@ internal class Canvas : Form
         createShapeButton.UseVisualStyleBackColor = true;
         createShapeButton.Click += createShapeButton_Click;
         // 
-        // spriteListBox
+        // shapeCount
         // 
-        spriteListBox.FormattingEnabled = true;
-        spriteListBox.ItemHeight = 20;
-        spriteListBox.Location = new Point(12, 58);
-        spriteListBox.Name = "spriteListBox";
-        spriteListBox.Size = new Size(148, 204);
-        spriteListBox.TabIndex = 1;
-        spriteListBox.TabStop = false;
-        Controls.Add(spriteListBox);
+        shapeCount.AutoSize = true;
+        shapeCount.Location = new Point(12, 60);
+        shapeCount.Name = "shapeCount";
+        shapeCount.Size = new Size(0, 20);
+        shapeCount.TabIndex = 2;
+        shapeCount.ForeColor = Color.White;
         // 
         // Canvas
         // 
@@ -59,6 +70,7 @@ internal class Canvas : Form
         Controls.Add(panel1);
         Name = "Canvas";
         panel1.ResumeLayout(false);
+        panel1.PerformLayout();
         ResumeLayout(false);
     }
 
@@ -72,15 +84,20 @@ internal class Canvas : Form
         Focus();
     }
 
-    public void InitialiseListBoxItems() 
+    public void UpdateListBoxItems()
     {
         spriteListBox.Items.Clear();
 
         foreach (var shape in Engine.Shapes)
-            spriteListBox.Items.Add(shape.Tag);
+            spriteListBox.Items.Add($"{shape.GetType().Name}: {shape.Tag}");
+
+        foreach (var sprite in Engine.Sprites)
+            spriteListBox.Items.Add($"{sprite.GetType().Name}: {sprite.Tag}");
 
         spriteListBox.Refresh();
+        shapeCount.Text = "Sprites: " + spriteListBox.Items.Count.ToString();
     }
+
 
     private void createShapeButton_Click(object sender, EventArgs e)
     {

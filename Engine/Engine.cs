@@ -83,9 +83,10 @@ internal abstract class Engine
         if (Application.OpenForms.Count > 0)
         {
             Form canvasForm = Application.OpenForms[0];
-
             if (canvasForm is Canvas canvas)
-                canvas.InitialiseListBoxItems();
+            {
+                canvas.UpdateListBoxItems();
+            }
         }
     }
 

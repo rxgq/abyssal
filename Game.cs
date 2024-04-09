@@ -10,9 +10,6 @@ internal class Game : Engine
     public override void OnLoad()
     {
         Player = new(new Vector2(400, 400), new Vector2(10, 10), "player");
-
-        new Shape2D(new Vector2(500, 400), new Vector2(10, 10), "s1");
-        new Shape2D(new Vector2(600, 600), new Vector2(10, 10), "s2");
     }
 
     public override void OnDraw()

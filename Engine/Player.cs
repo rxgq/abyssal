@@ -6,5 +6,4 @@ internal class Player(Vector2 position, Vector2 scale, string tag) : Sprite2D(po
     public bool Down = false;
     public bool Left = false;
     public bool Right = false;
-
 }
