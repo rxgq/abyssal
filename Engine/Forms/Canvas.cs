@@ -13,7 +13,7 @@ internal class Canvas : Form
     private bool ShowHoverBox;
 
     private bool RemoveMode = false;
-    private string SelectedShapeItem = ""; 
+    private string SelectedShapeItem = "";
 
     private Panel panel1;
     private Label shapeCount;
@@ -21,23 +21,26 @@ internal class Canvas : Form
     private CheckBox colliderFrictionCheckbox;
     private Button removeModeButton;
     private ComboBox shapeDropdown;
+    private Button saveButton;
     private ListBox spriteListBox;
 
     private void InitializeComponent()
     {
         panel1 = new Panel();
+        shapeDropdown = new ComboBox();
         removeModeButton = new Button();
         colliderFrictionCheckbox = new CheckBox();
         playButton = new Button();
         shapeCount = new Label();
         spriteListBox = new ListBox();
-        shapeDropdown = new ComboBox();
+        saveButton = new Button();
         panel1.SuspendLayout();
         SuspendLayout();
         // 
         // panel1
         // 
         panel1.BackColor = Color.FromArgb(50, 50, 50);
+        panel1.Controls.Add(saveButton);
         panel1.Controls.Add(shapeDropdown);
         panel1.Controls.Add(removeModeButton);
         panel1.Controls.Add(colliderFrictionCheckbox);
@@ -48,6 +51,17 @@ internal class Canvas : Form
         panel1.Name = "panel1";
         panel1.Size = new Size(265, 722);
         panel1.TabIndex = 0;
+        // 
+        // shapeDropdown
+        // 
+        shapeDropdown.FormattingEnabled = true;
+        shapeDropdown.Items.AddRange(new object[] { "Player", "Shape" });
+        shapeDropdown.Location = new Point(12, 347);
+        shapeDropdown.Name = "shapeDropdown";
+        shapeDropdown.Size = new Size(151, 28);
+        shapeDropdown.TabIndex = 1;
+        shapeDropdown.TabStop = false;
+        shapeDropdown.SelectedIndexChanged += shapeDropdown_SelectedIndexChanged;
         // 
         // removeModeButton
         // 
@@ -103,16 +117,15 @@ internal class Canvas : Form
         spriteListBox.TabIndex = 1;
         spriteListBox.TabStop = false;
         // 
-        // shapeDropdown
+        // saveButton
         // 
-        shapeDropdown.FormattingEnabled = true;
-        shapeDropdown.Location = new Point(12, 347);
-        shapeDropdown.Name = "shapeDropdown";
-        shapeDropdown.Size = new Size(151, 28);
-        shapeDropdown.TabIndex = 1;
-        shapeDropdown.SelectedIndexChanged += shapeDropdown_SelectedIndexChanged;
-        shapeDropdown.Items.AddRange(new string[] { "Player", "Shape" });
-        shapeDropdown.TabStop = false;
+        saveButton.Location = new Point(155, 680);
+        saveButton.Name = "saveButton";
+        saveButton.Size = new Size(94, 29);
+        saveButton.TabIndex = 5;
+        saveButton.Text = "Save";
+        saveButton.UseVisualStyleBackColor = true;
+        saveButton.Click += saveButton_Click;
         // 
         // Canvas
         // 
@@ -131,6 +144,7 @@ internal class Canvas : Form
         DoubleBuffered = true;
         MouseClick += Canvas_MouseClick;
         MouseMove += Canvas_MouseMove;
+        spriteListBox.MouseDown += SpriteListBox_MouseDown;
 
         Focus();
     }
@@ -177,12 +191,12 @@ internal class Canvas : Form
                 Engine.UnregisterSprite(potentialSpriteOverlap);
         }
 
-        else if (potentialShapeOverlap is null) 
+        else if (potentialShapeOverlap is null)
         {
-            if (SelectedShapeItem == "Player") 
+            if (SelectedShapeItem == "Player")
             {
-                if (Game.Player is null) 
-                    Game.Player = new Player(position, scale, GetNextID("player"));                   
+                if (Game.Player is null)
+                    Game.Player = new Player(position, scale, GetNextID("player"));
             }
 
 
@@ -257,7 +271,7 @@ internal class Canvas : Form
 
         Game.Player.PlayPosition.X = Game.Player.Position.X;
         Game.Player.PlayPosition.Y = Game.Player.Position.Y;
-        
+
         ToggleUIVisibility(Game.Play);
 
         Focus();
@@ -310,4 +324,24 @@ internal class Canvas : Form
         SelectedShapeItem = comboBox.SelectedItem.ToString()!;
     }
 
+    public void SpriteListBox_MouseDown(object sender, EventArgs e)
+    {
+
+    }
+
+    private void saveButton_Click(object sender, EventArgs e)
+    {
+        FolderBrowserDialog folderBrowserDialog = new()
+        {
+            InitialDirectory = @"C:\"
+        };
+
+        DialogResult result = folderBrowserDialog.ShowDialog();
+
+        if (result == DialogResult.OK)
+        {
+            string filePath = folderBrowserDialog.SelectedPath;
+            Engine.SaveAsJson(filePath);
+        }
+    }
 }

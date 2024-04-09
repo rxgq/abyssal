@@ -17,9 +17,9 @@ internal abstract class Engine
         Application.SetCompatibleTextRenderingDefault(false);
 
         Window = new Canvas()
-        { 
-            Size = new((int)ScreenSize.X, (int)ScreenSize.Y), 
-            Text = "New Game", 
+        {
+            Size = new((int)ScreenSize.X, (int)ScreenSize.Y),
+            Text = "New Game",
         };
 
         Window.Paint += Renderer;
@@ -37,7 +37,7 @@ internal abstract class Engine
     {
         OnLoad();
 
-        while (GameLoopThread.IsAlive) 
+        while (GameLoopThread.IsAlive)
         {
             try
             {
@@ -48,7 +48,7 @@ internal abstract class Engine
                 Thread.Sleep(1);
             }
             catch (Exception ex)
-            { 
+            {
                 Console.WriteLine(ex.ToString());
             }
         }
@@ -59,7 +59,7 @@ internal abstract class Engine
         Graphics g = e.Graphics;
         //g.Clear(BackgroundColour);
 
-        foreach (Shape2D shape in Shapes) 
+        foreach (Shape2D shape in Shapes)
             g.FillRectangle(new SolidBrush(Color.Red), (int)shape.Position.X, (int)shape.Position.Y, (int)shape.Scale.X, (int)shape.Scale.Y);
 
         foreach (Sprite2D sprite in Sprites)
@@ -83,7 +83,7 @@ internal abstract class Engine
         GetCanvas()!.UpdateListBoxItems();
     }
 
-    public static Canvas? GetCanvas() 
+    public static Canvas? GetCanvas()
     {
         if (Application.OpenForms.Count > 0)
         {
@@ -96,16 +96,35 @@ internal abstract class Engine
         return null;
     }
 
-    public static void RegisterSprite(Sprite2D sprite) 
-    { 
-        Sprites.Add(sprite); 
+    public static void RegisterSprite(Sprite2D sprite)
+    {
+        Sprites.Add(sprite);
         UpdateListBoxItems();
     }
 
     public static void UnregisterSprite(Sprite2D sprite)
     {
-        Sprites.Remove(sprite); 
+        Sprites.Remove(sprite);
         UpdateListBoxItems();
+    }
+
+    public static void SaveAsJson(string filePath)
+    {
+        string skytaieFolderPath = Path.Combine(filePath, "skytaie");
+
+        if (!Directory.Exists(skytaieFolderPath))
+        {
+            Directory.CreateDirectory(skytaieFolderPath);
+        }
+
+
+
+    }
+
+
+public static void LoadJson() 
+    { 
+    
     }
 
     public void Window_KeyDown(object sender, KeyEventArgs e) => GetKeyDown(e); 
