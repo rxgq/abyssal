@@ -185,20 +185,19 @@ internal class Canvas : Form
         if (RemoveMode)
         {
             if (potentialShapeOverlap is not null)
-                Engine.UnregisterShape(potentialShapeOverlap);
+                potentialShapeOverlap.DestroySelf();
 
             if (potentialSpriteOverlap is not null)
-                Engine.UnregisterSprite(potentialSpriteOverlap);
+                potentialSpriteOverlap.DestroySelf();
         }
 
         else if (potentialShapeOverlap is null)
         {
             if (SelectedShapeItem == "Player")
             {
-                if (Game.Player is null)
+                if (Game.Player is null || !Engine.Sprites.Any(e => e is Player))
                     Game.Player = new Player(position, scale, GetNextID("player"));
             }
-
 
             else if (SelectedShapeItem == "Shape")
                 new Shape2D(position, scale, GetNextID("shape"));
