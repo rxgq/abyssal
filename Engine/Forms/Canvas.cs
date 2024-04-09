@@ -4,6 +4,8 @@ internal class Canvas : Form
 {
     public Color CanvasColour;
 
+    private int GridSize = 10;
+    private Color GridColor = Color.LightGray;
     private void InitializeComponent()
     {
         panel1 = new Panel();
@@ -65,9 +67,26 @@ internal class Canvas : Form
     {
         Point point = e.Location;
 
-        Vector2 position = new(point.X, point.Y);
         Vector2 scale = new(10, 10);
 
+        int X = (point.X / GridSize) * GridSize;
+        int Y = (point.Y / GridSize) * GridSize;
+
+        Vector2 position = new(X, Y);
+
         new Shape2D(position, scale, "test");
+    }
+
+    protected override void OnPaint(PaintEventArgs e)
+    {
+        base.OnPaint(e);
+
+        using Pen gridPen = new(GridColor);
+
+        for (int x = 0; x < ClientSize.Width; x += GridSize)
+            e.Graphics.DrawLine(gridPen, x, 0, x, ClientSize.Height);
+
+        for (int y = 0; y < ClientSize.Height; y += GridSize)
+            e.Graphics.DrawLine(gridPen, 0, y, ClientSize.Width, y);
     }
 }

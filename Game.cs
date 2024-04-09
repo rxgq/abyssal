@@ -48,9 +48,7 @@ internal class Game : Engine
         else if (e.Control && e.KeyCode == Keys.Z)
         {
             if (Engine.Shapes.Count > 0) 
-            {
                 Engine.Shapes.RemoveAt(Engine.Shapes.Count - 1);
-            }
         }
     }
 
