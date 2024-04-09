@@ -24,7 +24,33 @@ internal class Game : Engine
 
         if (!Player.IsColliding(newPosition))
             Player.PlayPosition = newPosition;
+
+        else
+        {
+            int newX = Player.PlayPosition.X;
+            int newY = Player.PlayPosition.Y;
+
+            if (Player.Left || Player.Right)
+            {
+                Vector2 tempPositionX = new(Player.Left ? newX - Player.Velocity : newX + Player.Velocity, Player.PlayPosition.Y);
+
+                if (!Player.IsColliding(tempPositionX))
+                    newX = tempPositionX.X;
+            }
+
+            if (Player.Up || Player.Down)
+            {
+                Vector2 tempPositionY = new(Player.PlayPosition.X, Player.Up ? newY - Player.Velocity : newY + Player.Velocity);
+
+                if (!Player.IsColliding(tempPositionY))
+                    newY = tempPositionY.Y;
+            }
+
+            Player.PlayPosition = new Vector2(newX, newY);
+        }
+
     }
+
 
     public override void GetKeyDown(KeyEventArgs e)
     {

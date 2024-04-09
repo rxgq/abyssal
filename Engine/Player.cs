@@ -8,4 +8,5 @@ internal class Player(Vector2 position, Vector2 scale, string tag) : Sprite2D(po
     public bool Right = false;
 
     public int Velocity = 2;
+    public bool ColliderFriction = true;
 }
