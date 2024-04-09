@@ -30,6 +30,8 @@ internal class Game : Engine
     {
         if (e.Control && e.KeyCode == Keys.Z)
         {
+            if (Play) return;
+
             if (Shapes.Count > 0)
                 UnregisterShape(Shapes[Shapes.Count - 1]);
         }

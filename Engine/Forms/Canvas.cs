@@ -11,6 +11,7 @@ internal class Canvas : Form
     private readonly Color GridColor = Color.LightGray;
     private Vector2 HoverPosition;
     private bool ShowHoverBox;
+    private bool IsMouseDown = false;
 
     private Panel panel1;
     private Label shapeCount;
@@ -84,6 +85,8 @@ internal class Canvas : Form
         DoubleBuffered = true;
         MouseClick += Canvas_MouseClick;
         MouseMove += Canvas_MouseMove;
+        MouseDown += Canvas_MouseDown;
+        MouseUp += Canvas_MouseUp;
 
         Focus();
     }
@@ -104,7 +107,7 @@ internal class Canvas : Form
 
     private void Canvas_MouseClick(object sender, MouseEventArgs e)
     {
-        if (Game.Play) return; 
+        if (Game.Play) return;
 
         Point point = e.Location;
 
@@ -115,13 +118,23 @@ internal class Canvas : Form
 
         Vector2 position = new(X, Y);
 
+
+        if (Engine.Shapes.Any(e => e.Position.X == position.X && e.Position.Y == position.Y))
+        {
+            return;
+        }
+
         new Shape2D(position, scale, "test");
     }
 
     private void Canvas_MouseMove(object sender, MouseEventArgs e) 
     {
         if (Game.Play) return;
-        
+
+        if (IsMouseDown) 
+        {
+            Canvas_MouseClick(sender, e);
+        }
 
         int X = (e.X / GridSize) * GridSize;
         int Y = (e.Y / GridSize) * GridSize;
@@ -132,11 +145,23 @@ internal class Canvas : Form
         Refresh();
     }
 
+    private void Canvas_MouseDown(object sender, MouseEventArgs e) 
+    {
+        IsMouseDown = true;
+        Canvas_MouseClick(sender, e);
+    }
+
+    private void Canvas_MouseUp(object sender, MouseEventArgs e)
+    {
+        IsMouseDown = false;
+    }
+
     protected override void OnPaint(PaintEventArgs e)
     {
         base.OnPaint(e);
 
-        using Pen gridPen = new(GridColor);
+        Color gridColor = Game.Play ? Color.FromArgb(50, Color.White) : GridColor;
+        using Pen gridPen = new(gridColor);
 
         for (int x = 0; x < ClientSize.Width; x += GridSize)
             e.Graphics.DrawLine(gridPen, x, 0, x, ClientSize.Height);
