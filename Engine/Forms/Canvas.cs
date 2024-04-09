@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System.Drawing;
+using System.Windows.Forms;
 
 namespace engine;
 
@@ -8,6 +9,8 @@ internal class Canvas : Form
 
     private readonly int GridSize = 10;
     private readonly Color GridColor = Color.LightGray;
+    private Vector2 HoverPosition;
+    private bool ShowHoverBox;
 
     private Panel panel1;
     private Label shapeCount;
@@ -80,6 +83,7 @@ internal class Canvas : Form
 
         DoubleBuffered = true;
         MouseClick += Canvas_MouseClick;
+        MouseMove += Canvas_MouseMove;
 
         Focus();
     }
@@ -114,6 +118,20 @@ internal class Canvas : Form
         new Shape2D(position, scale, "test");
     }
 
+    private void Canvas_MouseMove(object sender, MouseEventArgs e) 
+    {
+        if (Game.Play) return;
+        
+
+        int X = (e.X / GridSize) * GridSize;
+        int Y = (e.Y / GridSize) * GridSize;
+        
+        HoverPosition = new(X, Y);      
+
+        ShowHoverBox = true;
+        Refresh();
+    }
+
     protected override void OnPaint(PaintEventArgs e)
     {
         base.OnPaint(e);
@@ -125,6 +143,12 @@ internal class Canvas : Form
 
         for (int y = 0; y < ClientSize.Height; y += GridSize)
             e.Graphics.DrawLine(gridPen, 0, y, ClientSize.Width, y);
+
+        if (ShowHoverBox && HoverPosition != null)
+        {
+            using Brush hoverBrush = new SolidBrush(Color.FromArgb(100, Color.Gray));
+            e.Graphics.FillRectangle(hoverBrush, HoverPosition.X, HoverPosition.Y, GridSize, GridSize);
+        }
     }
 
     private void playButton_Click(object sender, EventArgs e)
