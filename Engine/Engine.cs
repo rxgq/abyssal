@@ -88,17 +88,25 @@ internal abstract class Engine
         if (Application.OpenForms.Count > 0)
         {
             Form canvasForm = Application.OpenForms[0];
+
             if (canvasForm is Canvas canvas)
-            {
                 return canvas;
-            }
         }
 
         return null;
     }
 
-    public static void RegisterSprite(Sprite2D sprite) => Sprites.Add(sprite);
-    public static void UnregisterSprite(Sprite2D sprite) => Sprites.Remove(sprite);
+    public static void RegisterSprite(Sprite2D sprite) 
+    { 
+        Sprites.Add(sprite); 
+        UpdateListBoxItems();
+    }
+
+    public static void UnregisterSprite(Sprite2D sprite)
+    {
+        Sprites.Remove(sprite); 
+        UpdateListBoxItems();
+    }
 
     public void Window_KeyDown(object sender, KeyEventArgs e) => GetKeyDown(e); 
     public void Window_KeyUp(object sender, KeyEventArgs e) => GetKeyUp(e);

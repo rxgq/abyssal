@@ -2,12 +2,12 @@
 
 internal class Game : Engine
 {
-    public static Player Player;
+    public static Player? Player;
     public static bool Play = false;
 
     public override void OnLoad()
     {
-        Player = new(new Vector2(400, 400), new Vector2(10, 10), "player");
+
     }
 
     public override void OnDraw()
@@ -17,6 +17,8 @@ internal class Game : Engine
 
     public override void OnUpdate()
     {
+        if (Player is null) return;
+
         Vector2 newPosition = new(
             Player.PlayPosition.X + (Player.Left ? -Player.Velocity : Player.Right ? Player.Velocity : 0),
             Player.PlayPosition.Y + (Player.Up ? -Player.Velocity : Player.Down ? Player.Velocity : 0)

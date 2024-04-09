@@ -11,15 +11,16 @@ internal class Canvas : Form
     private readonly Color GridColor = Color.LightGray;
     private Vector2 HoverPosition;
     private bool ShowHoverBox;
-    private bool IsMouseDown = false;
 
     private bool RemoveMode = false;
+    private string SelectedShapeItem = ""; 
 
     private Panel panel1;
     private Label shapeCount;
     private Button playButton;
     private CheckBox colliderFrictionCheckbox;
     private Button removeModeButton;
+    private ComboBox shapeDropdown;
     private ListBox spriteListBox;
 
     private void InitializeComponent()
@@ -30,12 +31,14 @@ internal class Canvas : Form
         playButton = new Button();
         shapeCount = new Label();
         spriteListBox = new ListBox();
+        shapeDropdown = new ComboBox();
         panel1.SuspendLayout();
         SuspendLayout();
         // 
         // panel1
         // 
         panel1.BackColor = Color.FromArgb(50, 50, 50);
+        panel1.Controls.Add(shapeDropdown);
         panel1.Controls.Add(removeModeButton);
         panel1.Controls.Add(colliderFrictionCheckbox);
         panel1.Controls.Add(playButton);
@@ -100,6 +103,17 @@ internal class Canvas : Form
         spriteListBox.TabIndex = 1;
         spriteListBox.TabStop = false;
         // 
+        // shapeDropdown
+        // 
+        shapeDropdown.FormattingEnabled = true;
+        shapeDropdown.Location = new Point(12, 347);
+        shapeDropdown.Name = "shapeDropdown";
+        shapeDropdown.Size = new Size(151, 28);
+        shapeDropdown.TabIndex = 1;
+        shapeDropdown.SelectedIndexChanged += shapeDropdown_SelectedIndexChanged;
+        shapeDropdown.Items.AddRange(new string[] { "Player", "Shape" });
+        shapeDropdown.TabStop = false;
+        // 
         // Canvas
         // 
         ClientSize = new Size(1062, 721);
@@ -117,8 +131,6 @@ internal class Canvas : Form
         DoubleBuffered = true;
         MouseClick += Canvas_MouseClick;
         MouseMove += Canvas_MouseMove;
-        MouseDown += Canvas_MouseDown;
-        MouseUp += Canvas_MouseUp;
 
         Focus();
     }
@@ -134,7 +146,7 @@ internal class Canvas : Form
             spriteListBox.Items.Add($"{sprite.GetType().Name}: {sprite.Tag}");
 
         spriteListBox.Refresh();
-        shapeCount.Text = "Sprites: " + spriteListBox.Items.Count.ToString();
+        shapeCount.Text = "Objects: " + spriteListBox.Items.Count.ToString();
     }
 
     private void Canvas_MouseClick(object sender, MouseEventArgs e)
@@ -153,17 +165,33 @@ internal class Canvas : Form
         Shape2D? potentialShapeOverlap = Engine.Shapes.FirstOrDefault(shape =>
             shape.Position.X == position.X && shape.Position.Y == position.Y);
 
+        Sprite2D? potentialSpriteOverlap = Engine.Sprites.FirstOrDefault(shape =>
+            shape.Position.X == position.X && shape.Position.Y == position.Y);
+
         if (RemoveMode)
         {
             if (potentialShapeOverlap is not null)
                 Engine.UnregisterShape(potentialShapeOverlap);
+
+            if (potentialSpriteOverlap is not null)
+                Engine.UnregisterSprite(potentialSpriteOverlap);
         }
 
-        else if (potentialShapeOverlap is null)
-            new Shape2D(position, scale, GetNextID());
+        else if (potentialShapeOverlap is null) 
+        {
+            if (SelectedShapeItem == "Player") 
+            {
+                if (Game.Player is null) 
+                    Game.Player = new Player(position, scale, GetNextID("player"));                   
+            }
+
+
+            else if (SelectedShapeItem == "Shape")
+                new Shape2D(position, scale, GetNextID("shape"));
+        }
     }
 
-    public string GetNextID()
+    public string GetNextID(String defaultTag)
     {
         int largestShapeTag = -1;
         foreach (var shape in Engine.Shapes)
@@ -178,7 +206,7 @@ internal class Canvas : Form
 
         largestShapeTag++;
 
-        return $"shape {largestShapeTag}";
+        return $"{defaultTag} {largestShapeTag}";
     }
 
 
@@ -193,16 +221,6 @@ internal class Canvas : Form
 
         ShowHoverBox = true;
         Refresh();
-    }
-
-    private void Canvas_MouseDown(object sender, MouseEventArgs e)
-    {
-        IsMouseDown = true;
-    }
-
-    private void Canvas_MouseUp(object sender, MouseEventArgs e)
-    {
-        IsMouseDown = false;
     }
 
     protected override void OnPaint(PaintEventArgs e)
@@ -221,12 +239,14 @@ internal class Canvas : Form
         if (ShowHoverBox && HoverPosition != null)
         {
             using Brush hoverBrush = new SolidBrush(Color.FromArgb(100, Color.Gray));
-            e.Graphics.FillRectangle(hoverBrush, (int)HoverPosition.X, (int)HoverPosition.Y, GridSize, GridSize);
+            e.Graphics.FillRectangle(hoverBrush, HoverPosition.X, HoverPosition.Y, GridSize, GridSize);
         }
     }
 
     public void playButton_Click(object sender, EventArgs e)
     {
+        if (Game.Player is null) return;
+
         Game.Play = !Game.Play;
         Game.Player.Up = false;
         Game.Player.Down = false;
@@ -237,7 +257,7 @@ internal class Canvas : Form
 
         Game.Player.PlayPosition.X = Game.Player.Position.X;
         Game.Player.PlayPosition.Y = Game.Player.Position.Y;
-
+        
         ToggleUIVisibility(Game.Play);
 
         Focus();
@@ -265,7 +285,7 @@ internal class Canvas : Form
 
     protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
     {
-        if (keyData == Keys.Escape)
+        if (keyData == Keys.Escape && Game.Play)
         {
             playButton_Click(null, EventArgs.Empty);
             return true;
@@ -273,7 +293,6 @@ internal class Canvas : Form
 
         return base.ProcessCmdKey(ref msg, keyData);
     }
-
 
     public void ToggleUIVisibility(bool visible)
     {
@@ -283,6 +302,12 @@ internal class Canvas : Form
         removeModeButton.Visible = !visible;
         shapeCount.Visible = !visible;
         spriteListBox.Visible = !visible;
+    }
+
+    private void shapeDropdown_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        ComboBox comboBox = (ComboBox)sender;
+        SelectedShapeItem = comboBox.SelectedItem.ToString()!;
     }
 
 }
