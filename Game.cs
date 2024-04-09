@@ -1,11 +1,9 @@
-﻿using Microsoft.VisualBasic.Devices;
-using System.Numerics;
-
-namespace engine;
+﻿namespace engine;
 
 internal class Game : Engine
 {
     Player Player;
+    public static bool Play = false;
 
     public override void OnLoad()
     {
@@ -30,6 +28,14 @@ internal class Game : Engine
 
     public override void GetKeyDown(KeyEventArgs e)
     {
+        if (e.Control && e.KeyCode == Keys.Z)
+        {
+            if (Shapes.Count > 0)
+                UnregisterShape(Shapes[Shapes.Count - 1]);
+        }
+
+        if (!Play) return;
+
         if (e.KeyCode == Keys.W)
             Player.Up = true;
 
@@ -41,16 +47,12 @@ internal class Game : Engine
 
         else if (e.KeyCode == Keys.D)
             Player.Right = true;
-
-        else if (e.Control && e.KeyCode == Keys.Z)
-        {
-            if (Shapes.Count > 0) 
-                Shapes.RemoveAt(Shapes.Count - 1);
-        }
     }
 
     public override void GetKeyUp(KeyEventArgs e)
     {
+        if (!Play) return;
+
         if (e.KeyCode == Keys.W)
             Player.Up = false;
 

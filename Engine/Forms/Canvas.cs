@@ -10,29 +10,38 @@ internal class Canvas : Form
     private readonly Color GridColor = Color.LightGray;
 
     private Panel panel1;
-    private Button createShapeButton;
     private Label shapeCount;
+    private Button playButton;
     private ListBox spriteListBox;
 
     private void InitializeComponent()
     {
         panel1 = new Panel();
-        spriteListBox = new ListBox();
-        createShapeButton = new Button();
         shapeCount = new Label();
+        spriteListBox = new ListBox();
+        playButton = new Button();
         panel1.SuspendLayout();
         SuspendLayout();
         // 
         // panel1
         // 
         panel1.BackColor = Color.FromArgb(50, 50, 50);
+        panel1.Controls.Add(playButton);
         panel1.Controls.Add(shapeCount);
         panel1.Controls.Add(spriteListBox);
-        panel1.Controls.Add(createShapeButton);
         panel1.Location = new Point(0, 0);
         panel1.Name = "panel1";
         panel1.Size = new Size(265, 722);
         panel1.TabIndex = 0;
+        // 
+        // shapeCount
+        // 
+        shapeCount.AutoSize = true;
+        shapeCount.ForeColor = Color.White;
+        shapeCount.Location = new Point(12, 60);
+        shapeCount.Name = "shapeCount";
+        shapeCount.Size = new Size(0, 20);
+        shapeCount.TabIndex = 2;
         // 
         // spriteListBox
         // 
@@ -44,25 +53,16 @@ internal class Canvas : Form
         spriteListBox.TabIndex = 1;
         spriteListBox.TabStop = false;
         // 
-        // createShapeButton
+        // playButton
         // 
-        createShapeButton.Location = new Point(12, 12);
-        createShapeButton.Name = "createShapeButton";
-        createShapeButton.Size = new Size(111, 29);
-        createShapeButton.TabIndex = 0;
-        createShapeButton.TabStop = false;
-        createShapeButton.Text = "Create Shape";
-        createShapeButton.UseVisualStyleBackColor = true;
-        createShapeButton.Click += createShapeButton_Click;
-        // 
-        // shapeCount
-        // 
-        shapeCount.AutoSize = true;
-        shapeCount.Location = new Point(12, 60);
-        shapeCount.Name = "shapeCount";
-        shapeCount.Size = new Size(0, 20);
-        shapeCount.TabIndex = 2;
-        shapeCount.ForeColor = Color.White;
+        playButton.Location = new Point(12, 12);
+        playButton.Name = "playButton";
+        playButton.Size = new Size(94, 29);
+        playButton.TabIndex = 3;
+        playButton.Text = "Play";
+        playButton.UseVisualStyleBackColor = true;
+        playButton.Click += playButton_Click;
+        playButton.TabStop = false;
         // 
         // Canvas
         // 
@@ -98,20 +98,10 @@ internal class Canvas : Form
         shapeCount.Text = "Sprites: " + spriteListBox.Items.Count.ToString();
     }
 
-
-    private void createShapeButton_Click(object sender, EventArgs e)
-    {
-        using (CreateShapeDialogue createShapeDialogue = new())
-        {
-            DialogResult result = createShapeDialogue.ShowDialog(this);
-        }
-
-        Focus();
-        ActiveControl = null;
-    }
-
     private void Canvas_MouseClick(object sender, MouseEventArgs e)
     {
+        if (Game.Play) return; 
+
         Point point = e.Location;
 
         Vector2 scale = new(10, 10);
@@ -135,5 +125,15 @@ internal class Canvas : Form
 
         for (int y = 0; y < ClientSize.Height; y += GridSize)
             e.Graphics.DrawLine(gridPen, 0, y, ClientSize.Width, y);
+    }
+
+    private void playButton_Click(object sender, EventArgs e)
+    {
+        Game.Play = !Game.Play;
+
+        playButton.Text = Game.Play ? "Playing..." : "Play";
+
+        Focus();
+        ActiveControl = null;
     }
 }
