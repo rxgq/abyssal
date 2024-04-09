@@ -16,20 +16,23 @@ internal class Canvas : Form
     private Panel panel1;
     private Label shapeCount;
     private Button playButton;
+    private CheckBox colliderFrictionCheckbox;
     private ListBox spriteListBox;
 
     private void InitializeComponent()
     {
         panel1 = new Panel();
+        colliderFrictionCheckbox = new CheckBox();
+        playButton = new Button();
         shapeCount = new Label();
         spriteListBox = new ListBox();
-        playButton = new Button();
         panel1.SuspendLayout();
         SuspendLayout();
         // 
         // panel1
         // 
         panel1.BackColor = Color.FromArgb(50, 50, 50);
+        panel1.Controls.Add(colliderFrictionCheckbox);
         panel1.Controls.Add(playButton);
         panel1.Controls.Add(shapeCount);
         panel1.Controls.Add(spriteListBox);
@@ -37,6 +40,30 @@ internal class Canvas : Form
         panel1.Name = "panel1";
         panel1.Size = new Size(265, 722);
         panel1.TabIndex = 0;
+        // 
+        // colliderFrictionCheckbox
+        // 
+        colliderFrictionCheckbox.AutoSize = true;
+        colliderFrictionCheckbox.ForeColor = SystemColors.ControlLightLight;
+        colliderFrictionCheckbox.Location = new Point(12, 307);
+        colliderFrictionCheckbox.Name = "colliderFrictionCheckbox";
+        colliderFrictionCheckbox.Size = new Size(124, 24);
+        colliderFrictionCheckbox.TabIndex = 4;
+        colliderFrictionCheckbox.TabStop = false;
+        colliderFrictionCheckbox.Text = "Player Friction";
+        colliderFrictionCheckbox.UseVisualStyleBackColor = true;
+        colliderFrictionCheckbox.CheckedChanged += colliderFrictionCheckbox_CheckedChanged;
+        // 
+        // playButton
+        // 
+        playButton.Location = new Point(12, 12);
+        playButton.Name = "playButton";
+        playButton.Size = new Size(94, 29);
+        playButton.TabIndex = 3;
+        playButton.TabStop = false;
+        playButton.Text = "Play";
+        playButton.UseVisualStyleBackColor = true;
+        playButton.Click += playButton_Click;
         // 
         // shapeCount
         // 
@@ -51,22 +78,11 @@ internal class Canvas : Form
         // 
         spriteListBox.FormattingEnabled = true;
         spriteListBox.ItemHeight = 20;
-        spriteListBox.Location = new Point(12, 83);
+        spriteListBox.Location = new Point(12, 82);
         spriteListBox.Name = "spriteListBox";
         spriteListBox.Size = new Size(111, 204);
         spriteListBox.TabIndex = 1;
         spriteListBox.TabStop = false;
-        // 
-        // playButton
-        // 
-        playButton.Location = new Point(12, 12);
-        playButton.Name = "playButton";
-        playButton.Size = new Size(94, 29);
-        playButton.TabIndex = 3;
-        playButton.Text = "Play";
-        playButton.UseVisualStyleBackColor = true;
-        playButton.Click += playButton_Click;
-        playButton.TabStop = false;
         // 
         // Canvas
         // 
@@ -129,20 +145,20 @@ internal class Canvas : Form
             new Shape2D(position, scale, "shape");
     }
 
-    private void Canvas_MouseMove(object sender, MouseEventArgs e) 
+    private void Canvas_MouseMove(object sender, MouseEventArgs e)
     {
         if (Game.Play) return;
 
         int X = (e.X / GridSize) * GridSize;
         int Y = (e.Y / GridSize) * GridSize;
-        
-        HoverPosition = new(X, Y);      
+
+        HoverPosition = new(X, Y);
 
         ShowHoverBox = true;
         Refresh();
     }
 
-    private void Canvas_MouseDown(object sender, MouseEventArgs e) 
+    private void Canvas_MouseDown(object sender, MouseEventArgs e)
     {
         IsMouseDown = true;
     }
@@ -184,6 +200,15 @@ internal class Canvas : Form
 
         Game.Player.PlayPosition.X = Game.Player.Position.X;
         Game.Player.PlayPosition.Y = Game.Player.Position.Y;
+
+        Focus();
+        ActiveControl = null;
+    }
+
+    private void colliderFrictionCheckbox_CheckedChanged(object sender, EventArgs e)
+    {
+        CheckBox checkBox = (CheckBox)sender;
+        Game.Player.ColliderFriction = checkBox.Checked;
 
         Focus();
         ActiveControl = null;

@@ -25,7 +25,7 @@ internal class Game : Engine
         if (!Player.IsColliding(newPosition))
             Player.PlayPosition = newPosition;
 
-        else
+        else if (Player.ColliderFriction)
         {
             int newX = Player.PlayPosition.X;
             int newY = Player.PlayPosition.Y;
