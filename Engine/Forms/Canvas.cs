@@ -44,6 +44,7 @@ internal class Canvas : Form
     {
         InitializeComponent();
         DoubleBuffered = true;
+        MouseClick += Canvas_MouseClick;
     }
 
     private Panel panel1;
@@ -58,5 +59,15 @@ internal class Canvas : Form
 
         Focus();
         ActiveControl = null;
+    }
+
+    private void Canvas_MouseClick(object sender, MouseEventArgs e)
+    {
+        Point point = e.Location;
+
+        Vector2 position = new(point.X, point.Y);
+        Vector2 scale = new(10, 10);
+
+        new Shape2D(position, scale, "test");
     }
 }
