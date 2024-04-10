@@ -125,27 +125,16 @@ internal abstract class Engine
             WriteIndented = true,
         };
 
-        foreach (var shape in Sprites)
-        {
-            string test = JsonSerializer.Serialize((Player)shape, options);
-        }
+        List<Shape2D> shapesList = new(Shapes);
+        List<Sprite2D> spritesList = new(Sprites);
 
-        foreach (var shape in Shapes)
-        {
-            string shapeJson = JsonSerializer.Serialize(shape, options);
-            File.AppendAllText(shapesFilePath, shapeJson + Environment.NewLine);
-        }
+        string shapesJson = JsonSerializer.Serialize(shapesList, options);
+        File.WriteAllText(shapesFilePath, shapesJson);
 
-        foreach (var sprite in Sprites)
-        {
-            string spriteJson = JsonSerializer.Serialize(sprite, options);
-
-            if (sprite.Tag.Contains("player")) 
-                spriteJson = JsonSerializer.Serialize((Player)sprite, options);
-
-            File.AppendAllText(spritesFilePath, spriteJson + Environment.NewLine);
-        }
+        string spritesJson = JsonSerializer.Serialize(spritesList, options);
+        File.WriteAllText(spritesFilePath, spritesJson);
     }
+
 
     public static void LoadJson(string path)
     {
@@ -160,26 +149,14 @@ internal abstract class Engine
                 string json = File.ReadAllText(jsonFile);
 
                 if (jsonFile.EndsWith("shapes.json"))
-                {
-                    List<Shape2D> shapes = JsonSerializer.Deserialize<List<Shape2D>>(json);
+                    JsonSerializer.Deserialize<List<Shape2D>>(json);
 
-                    if (shapes is null) return;
-
-                    foreach (Shape2D shape in shapes)
-                        RegisterShape(shape);
-                }
                 else if (jsonFile.EndsWith("sprites.json"))
-                {
-                    List<Sprite2D> sprites = JsonSerializer.Deserialize<List<Sprite2D>>(json);
-
-                    if (sprites is null) return;
-
-                    foreach (Sprite2D sprite in sprites)
-                        RegisterSprite(sprite);
-                }
+                    JsonSerializer.Deserialize<List<Sprite2D>>(json);
             }
         }
     }
+
 
 
     public void Window_KeyDown(object sender, KeyEventArgs e) => GetKeyDown(e); 
