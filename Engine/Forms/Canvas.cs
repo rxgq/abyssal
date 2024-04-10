@@ -22,24 +22,27 @@ internal class Canvas : Form
     private Button removeModeButton;
     private ComboBox shapeDropdown;
     private Button saveButton;
+    private Button loadButton;
     private ListBox spriteListBox;
 
     private void InitializeComponent()
     {
         panel1 = new Panel();
+        saveButton = new Button();
         shapeDropdown = new ComboBox();
         removeModeButton = new Button();
         colliderFrictionCheckbox = new CheckBox();
         playButton = new Button();
         shapeCount = new Label();
         spriteListBox = new ListBox();
-        saveButton = new Button();
+        loadButton = new Button();
         panel1.SuspendLayout();
         SuspendLayout();
         // 
         // panel1
         // 
         panel1.BackColor = Color.FromArgb(50, 50, 50);
+        panel1.Controls.Add(loadButton);
         panel1.Controls.Add(saveButton);
         panel1.Controls.Add(shapeDropdown);
         panel1.Controls.Add(removeModeButton);
@@ -51,6 +54,16 @@ internal class Canvas : Form
         panel1.Name = "panel1";
         panel1.Size = new Size(265, 722);
         panel1.TabIndex = 0;
+        // 
+        // saveButton
+        // 
+        saveButton.Location = new Point(155, 680);
+        saveButton.Name = "saveButton";
+        saveButton.Size = new Size(94, 29);
+        saveButton.TabIndex = 5;
+        saveButton.Text = "Save";
+        saveButton.UseVisualStyleBackColor = true;
+        saveButton.Click += saveButton_Click;
         // 
         // shapeDropdown
         // 
@@ -77,7 +90,7 @@ internal class Canvas : Form
         // 
         colliderFrictionCheckbox.AutoSize = true;
         colliderFrictionCheckbox.ForeColor = SystemColors.ControlLightLight;
-        colliderFrictionCheckbox.Location = new Point(12, 685);
+        colliderFrictionCheckbox.Location = new Point(12, 476);
         colliderFrictionCheckbox.Name = "colliderFrictionCheckbox";
         colliderFrictionCheckbox.Size = new Size(124, 24);
         colliderFrictionCheckbox.TabIndex = 4;
@@ -117,15 +130,15 @@ internal class Canvas : Form
         spriteListBox.TabIndex = 1;
         spriteListBox.TabStop = false;
         // 
-        // saveButton
+        // loadButton
         // 
-        saveButton.Location = new Point(155, 680);
-        saveButton.Name = "saveButton";
-        saveButton.Size = new Size(94, 29);
-        saveButton.TabIndex = 5;
-        saveButton.Text = "Save";
-        saveButton.UseVisualStyleBackColor = true;
-        saveButton.Click += saveButton_Click;
+        loadButton.Location = new Point(12, 680);
+        loadButton.Name = "loadButton";
+        loadButton.Size = new Size(94, 29);
+        loadButton.TabIndex = 1;
+        loadButton.Text = "Load";
+        loadButton.UseVisualStyleBackColor = true;
+        loadButton.Click += loadButton_Click;
         // 
         // Canvas
         // 
@@ -338,6 +351,22 @@ internal class Canvas : Form
         {
             string filePath = folderBrowserDialog.SelectedPath;
             Engine.SaveAsJson(filePath);
+        }
+    }
+
+    private void loadButton_Click(object sender, EventArgs e)
+    {
+        FolderBrowserDialog folderBrowserDialog = new()
+        {
+            InitialDirectory = @"C:\"
+        };
+
+        DialogResult result = folderBrowserDialog.ShowDialog();
+
+        if (result == DialogResult.OK)
+        {
+            string filePath = folderBrowserDialog.SelectedPath;
+            Engine.LoadJson(filePath);
         }
     }
 }

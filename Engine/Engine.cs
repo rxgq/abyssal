@@ -123,14 +123,51 @@ internal abstract class Engine
         string shapesJson = JsonSerializer.Serialize(Shapes, new JsonSerializerOptions { WriteIndented = true });
         File.WriteAllText(shapesFilePath, shapesJson);
 
-        string spritesJson = JsonSerializer.Serialize(Sprites, new JsonSerializerOptions { WriteIndented = true });
+        string spritesJson = JsonSerializer.Serialize(Sprites, new JsonSerializerOptions { WriteIndented = true }); 
         File.WriteAllText(spritesFilePath, spritesJson);
     }
 
-    public static void LoadJson() 
-    { 
-    
+    public static void LoadJson(string path)
+    {
+        string skytaieFolderPath = Path.Combine(path);
+
+        if (Directory.Exists(skytaieFolderPath))
+        {
+            string[] jsonFiles = Directory.GetFiles(skytaieFolderPath, "*.json");
+
+            foreach (string jsonFile in jsonFiles)
+            {
+                string json = File.ReadAllText(jsonFile);
+
+                if (jsonFile.EndsWith("shapes.json"))
+                {
+                    List<Shape2D> shapes = JsonSerializer.Deserialize<List<Shape2D>>(json);
+
+                    if (shapes is null) return;
+
+                    foreach (Shape2D shape in shapes)
+                        RegisterShape(shape);
+                }
+                else if (jsonFile.EndsWith("sprites.json"))
+                {
+                    List<Sprite2D> sprites = JsonSerializer.Deserialize<List<Sprite2D>>(json);
+
+                    if (sprites is null) return;
+
+                    foreach (Sprite2D sprite in sprites)
+                    {
+                        RegisterSprite(sprite);
+
+                        if (sprite.Tag.Contains("player"))
+                        {
+                            Game.Player = (Player)sprite;
+                        }
+                    }
+                }
+            }
+        }
     }
+
 
     public void Window_KeyDown(object sender, KeyEventArgs e) => GetKeyDown(e); 
     public void Window_KeyUp(object sender, KeyEventArgs e) => GetKeyUp(e);
