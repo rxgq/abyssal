@@ -9,6 +9,7 @@ internal abstract class Engine
     public readonly Color BackgroundColour = Color.White;
 
     private readonly Thread GameLoopThread;
+    private static string? ProjectPath;
 
     public static List<Shape2D> Shapes = new();
     public static List<Sprite2D> Sprites = new();
@@ -112,10 +113,13 @@ internal abstract class Engine
 
     public static void SaveAsJson(string filePath)
     {
+        if (ProjectPath is not null) filePath = ProjectPath;
+
         string skytaieFolderPath = Path.Combine(filePath, "skytaie");
 
-        if (!Directory.Exists(skytaieFolderPath))
+        if (!Directory.Exists(skytaieFolderPath) && ProjectPath is null)
             Directory.CreateDirectory(skytaieFolderPath);
+        else skytaieFolderPath = ProjectPath;
 
         string shapesFilePath = Path.Combine(skytaieFolderPath, "shapes.json");
         string spritesFilePath = Path.Combine(skytaieFolderPath, "sprites.json");
@@ -155,6 +159,8 @@ internal abstract class Engine
                     JsonSerializer.Deserialize<List<Sprite2D>>(json);
             }
         }
+
+        ProjectPath = path;
     }
 
 
