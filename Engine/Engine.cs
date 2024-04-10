@@ -120,11 +120,31 @@ internal abstract class Engine
         string shapesFilePath = Path.Combine(skytaieFolderPath, "shapes.json");
         string spritesFilePath = Path.Combine(skytaieFolderPath, "sprites.json");
 
-        string shapesJson = JsonSerializer.Serialize(Shapes, new JsonSerializerOptions { WriteIndented = true });
-        File.WriteAllText(shapesFilePath, shapesJson);
+        var options = new JsonSerializerOptions
+        {
+            WriteIndented = true,
+        };
 
-        string spritesJson = JsonSerializer.Serialize(Sprites, new JsonSerializerOptions { WriteIndented = true }); 
-        File.WriteAllText(spritesFilePath, spritesJson);
+        foreach (var shape in Sprites)
+        {
+            string test = JsonSerializer.Serialize((Player)shape, options);
+        }
+
+        foreach (var shape in Shapes)
+        {
+            string shapeJson = JsonSerializer.Serialize(shape, options);
+            File.AppendAllText(shapesFilePath, shapeJson + Environment.NewLine);
+        }
+
+        foreach (var sprite in Sprites)
+        {
+            string spriteJson = JsonSerializer.Serialize(sprite, options);
+
+            if (sprite.Tag.Contains("player")) 
+                spriteJson = JsonSerializer.Serialize((Player)sprite, options);
+
+            File.AppendAllText(spritesFilePath, spriteJson + Environment.NewLine);
+        }
     }
 
     public static void LoadJson(string path)
@@ -155,14 +175,7 @@ internal abstract class Engine
                     if (sprites is null) return;
 
                     foreach (Sprite2D sprite in sprites)
-                    {
                         RegisterSprite(sprite);
-
-                        if (sprite.Tag.Contains("player"))
-                        {
-                            Game.Player = (Player)sprite;
-                        }
-                    }
                 }
             }
         }
