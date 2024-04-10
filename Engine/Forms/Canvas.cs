@@ -340,6 +340,12 @@ internal class Canvas : Form
 
     private void saveButton_Click(object sender, EventArgs e)
     {
+        if (Engine.ProjectPath is not null) 
+        {
+            Engine.SaveAsJson(Engine.ProjectPath);
+            return;
+        }
+
         FolderBrowserDialog folderBrowserDialog = new()
         {
             InitialDirectory = @"C:\"

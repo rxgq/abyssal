@@ -9,7 +9,7 @@ internal abstract class Engine
     public readonly Color BackgroundColour = Color.White;
 
     private readonly Thread GameLoopThread;
-    private static string? ProjectPath;
+    public static string? ProjectPath;
 
     public static List<Shape2D> Shapes = new();
     public static List<Sprite2D> Sprites = new();
