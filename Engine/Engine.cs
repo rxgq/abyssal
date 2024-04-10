@@ -1,4 +1,6 @@
-﻿namespace engine;
+﻿using System.Text.Json;
+
+namespace engine;
 
 internal abstract class Engine
 {
@@ -113,14 +115,17 @@ internal abstract class Engine
         string skytaieFolderPath = Path.Combine(filePath, "skytaie");
 
         if (!Directory.Exists(skytaieFolderPath))
-        {
             Directory.CreateDirectory(skytaieFolderPath);
-        }
 
+        string shapesFilePath = Path.Combine(skytaieFolderPath, "shapes.json");
+        string spritesFilePath = Path.Combine(skytaieFolderPath, "sprites.json");
 
+        string shapesJson = JsonSerializer.Serialize(Shapes, new JsonSerializerOptions { WriteIndented = true });
+        File.WriteAllText(shapesFilePath, shapesJson);
 
+        string spritesJson = JsonSerializer.Serialize(Sprites, new JsonSerializerOptions { WriteIndented = true });
+        File.WriteAllText(spritesFilePath, spritesJson);
     }
-
 
     public static void LoadJson() 
     { 

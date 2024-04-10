@@ -184,11 +184,8 @@ internal class Canvas : Form
 
         if (RemoveMode)
         {
-            if (potentialShapeOverlap is not null)
-                potentialShapeOverlap.DestroySelf();
-
-            if (potentialSpriteOverlap is not null)
-                potentialSpriteOverlap.DestroySelf();
+            potentialShapeOverlap?.DestroySelf();
+            potentialSpriteOverlap?.DestroySelf();
         }
 
         else if (potentialShapeOverlap is null)
@@ -207,15 +204,13 @@ internal class Canvas : Form
     public string GetNextID(String defaultTag)
     {
         int largestShapeTag = -1;
+
         foreach (var shape in Engine.Shapes)
-        {
-            int shapeID;
-            if (int.TryParse(shape.Tag.Substring(6), out shapeID))
+            if (int.TryParse(shape.Tag.AsSpan(6), out int shapeID))
             {
                 if (shapeID > largestShapeTag)
                     largestShapeTag = shapeID;
             }
-        }
 
         largestShapeTag++;
 
@@ -279,8 +274,10 @@ internal class Canvas : Form
 
     private void colliderFrictionCheckbox_CheckedChanged(object sender, EventArgs e)
     {
+        if (Game.Player is null) return;
+
         CheckBox checkBox = (CheckBox)sender;
-        Game.Player.ColliderFriction = checkBox.Checked;
+        Game.Player!.ColliderFriction = checkBox.Checked;
 
         Focus();
         ActiveControl = null;
